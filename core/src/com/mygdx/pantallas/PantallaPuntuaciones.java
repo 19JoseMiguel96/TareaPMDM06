@@ -41,11 +41,11 @@ public class PantallaPuntuaciones implements Screen, InputProcessor {
     private void dibujarPuntuaciones(){
         bitMapFont.setColor(Color.WHITE);
         bitMapFont.getData().setScale(0.4f, 1.6f);
-        bitMapFont.draw(spritebatch, MejoresPuntuaciones.puntuacionesAltas[0] , 100, 412);
-        bitMapFont.draw(spritebatch, MejoresPuntuaciones.puntuacionesAltas[1] , 100, 373);
-        bitMapFont.draw(spritebatch, MejoresPuntuaciones.puntuacionesAltas[2] , 100, 335);
-        bitMapFont.draw(spritebatch, MejoresPuntuaciones.puntuacionesAltas[3] , 100, 297);
-        bitMapFont.draw(spritebatch, MejoresPuntuaciones.puntuacionesAltas[4] , 100, 262);
+        bitMapFont.draw(spritebatch2, MejoresPuntuaciones.puntuacionesAltas[0] , 102, 412);
+        bitMapFont.draw(spritebatch2, MejoresPuntuaciones.puntuacionesAltas[1] , 102, 373);
+        bitMapFont.draw(spritebatch2, MejoresPuntuaciones.puntuacionesAltas[2] , 102, 335);
+        bitMapFont.draw(spritebatch2, MejoresPuntuaciones.puntuacionesAltas[3] , 102, 297);
+        bitMapFont.draw(spritebatch2, MejoresPuntuaciones.puntuacionesAltas[4] , 102, 262);
     }
     @Override
     public void show() {
@@ -58,9 +58,11 @@ public class PantallaPuntuaciones implements Screen, InputProcessor {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         spritebatch.begin();
-        spritebatch.draw(fondoPuntuaciones,0,0, Mundo.TAMANO_MUNDO_ANCHO,Mundo.TAMANO_MUNDO_ALTO);
-        dibujarPuntuaciones();
+            spritebatch.draw(fondoPuntuaciones,0,0, Mundo.TAMANO_MUNDO_ANCHO,Mundo.TAMANO_MUNDO_ALTO);
         spritebatch.end();
+        spritebatch2.begin();
+            dibujarPuntuaciones();
+        spritebatch2.end();
         if (Gdx.input.justTouched()) {
             float posx = Gdx.input.getX();
             float posy = Gdx.input.getY();
@@ -82,6 +84,7 @@ public class PantallaPuntuaciones implements Screen, InputProcessor {
         camara2d.setToOrtho(false, Mundo.TAMANO_MUNDO_ANCHO, Mundo.TAMANO_MUNDO_ALTO);
         camara2d.update();
         spritebatch.setProjectionMatrix(camara2d.combined);
+        spritebatch2.setProjectionMatrix(camara2d.combined);
         spritebatch.disableBlending();
     }
 

@@ -17,19 +17,21 @@ public class MejoresPuntuaciones {
     public static String puntuaciones;
     private static SpriteBatch spritebatch;
     private static BitmapFont bitMapFont;
-    private static boolean isExtAvailable = Gdx.files.isExternalStorageAvailable();
-    private static boolean isLocAvailable = Gdx.files.isLocalStorageAvailable();
 
     public static void cargarPuntuaciones(){
         Gdx.app.log("LOG1", ""+path+ altasPuntuaciones);
-        if(isLocAvailable) {
+        if(altasPuntuaciones.exists()){
             puntuaciones = altasPuntuaciones.readString();
             puntuacionesAltas = puntuaciones.split(",");
+        }
+        else{
+            altasPuntuaciones.writeString(0+","
+                    +0+","+0+","+
+                    0+","+0, false);
         }
     }
 
     public static void añadirPuntuacion(int puntuacion){
-        if(isLocAvailable) {
                 if(Integer.parseInt(puntuacionesAltas[0])<puntuacion){
                     puntuacionesAltas[4]=puntuacionesAltas[3];
                     puntuacionesAltas[3]=puntuacionesAltas[2];
@@ -63,7 +65,6 @@ public class MejoresPuntuaciones {
                     puntuacionesAltas[4]=String.valueOf(puntuacion);
                     guardarPuntuaciones();
                 }
-        }
 
     }
     public String[] getPuntuacionesAltas(){
