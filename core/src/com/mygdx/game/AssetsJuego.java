@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class AssetsJuego {
     public static Texture texturaPersonajeP, texturaMadera, texturaRoca, texturaArana, texturaAbeja,
-            texturaFondo, texturaPuntoNegro, texturaPausa, texturaSalir;
+            texturaFondo, texturaPuntoNegro, texturaPausa, texturaSalir, texturaAnimacion1, texturaAnimacion2;
     /**
      * Método encargado de cargar todas las texturas.
      */
@@ -42,5 +42,9 @@ public class AssetsJuego {
         texturaRoca.dispose();
         texturaArana.dispose();
         texturaAbeja.dispose();
+        texturaFondo.dispose();
+        texturaPuntoNegro.dispose();
+        texturaPausa.dispose();
+        texturaSalir.dispose();
     }
 }

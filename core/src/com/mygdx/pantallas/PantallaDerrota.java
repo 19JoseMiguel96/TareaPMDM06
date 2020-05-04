@@ -14,55 +14,45 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MiJuegoGame;
 import com.mygdx.modelo.Mundo;
 
-public class PantallaInicio implements Screen, InputProcessor {
-    private boolean pausa;
-    private boolean finjuego;
-    private boolean salir;
+public class PantallaDerrota implements Screen, InputProcessor {
     private MiJuegoGame mijuegogame;
     private OrthographicCamera camara2d;
     private SpriteBatch spritebatch;
-    private static Texture fondoInicio;
+    private static Texture fondoDerrota;
 
-    public PantallaInicio(MiJuegoGame mijuegogame){
+    public PantallaDerrota(MiJuegoGame mijuegogame){
         this.mijuegogame=mijuegogame;
         camara2d = new OrthographicCamera();
         spritebatch = new SpriteBatch();
-        FileHandle imagenFondoInicio = Gdx.files.internal("Graficos/PantallaInicio.png");
-        fondoInicio = new Texture(imagenFondoInicio);
-        Vector3 temp = new Vector3();
-        Circle dedo;
+        FileHandle imagenFondoDerrota = Gdx.files.internal("Graficos/PantallaDerrota.png");
+        fondoDerrota = new Texture(imagenFondoDerrota);
     }
+
 
     @Override
     public void render(float delta) {
         spritebatch.begin();
-        spritebatch.draw(fondoInicio,0,0, Mundo.TAMANO_MUNDO_ANCHO,Mundo.TAMANO_MUNDO_ALTO);
+        spritebatch.draw(fondoDerrota,0,0, Mundo.TAMANO_MUNDO_ANCHO,Mundo.TAMANO_MUNDO_ALTO);
         spritebatch.end();
-
         if (Gdx.input.justTouched()) {
             float posx = Gdx.input.getX();
             float posy = Gdx.input.getY();
             Vector3 temp = new Vector3(posx,posy,0);
             camara2d.unproject(temp);
             Circle dedo = new Circle(temp.x,temp.y,2);
-            Rectangle botonJugar = new Rectangle(106,258,
-                    40,47);
-            Rectangle botonPuntuaciones = new Rectangle(106,210,
-                    40,47);
-            Rectangle botonSalir = new Rectangle(106,157,
-                    40,47);
-            if (Intersector.overlaps(dedo, botonJugar)) {
+            Rectangle botonNo = new Rectangle(104,296,
+                    17,26);
+            Rectangle botonSi = new Rectangle(127,296,
+                    17,26);
+            if (Intersector.overlaps(dedo, botonNo)) {
+                mijuegogame.setScreen(new PantallaInicio(mijuegogame));
+
+            }
+            if (Intersector.overlaps(dedo, botonSi)) {
                 mijuegogame.setScreen(new PantallaJuego(mijuegogame));
 
             }
-            if (Intersector.overlaps(dedo, botonPuntuaciones)) {
-                mijuegogame.setScreen(new PantallaPuntuaciones(mijuegogame));
 
-            }
-            if (Intersector.overlaps(dedo, botonSalir)) {
-                Gdx.app.exit();
-
-            }
         }
     }
 
@@ -70,16 +60,13 @@ public class PantallaInicio implements Screen, InputProcessor {
     public void resize(int width, int height) {
         camara2d.setToOrtho(false, Mundo.TAMANO_MUNDO_ANCHO, Mundo.TAMANO_MUNDO_ALTO);
         camara2d.update();
-
         spritebatch.setProjectionMatrix(camara2d.combined);
         spritebatch.disableBlending();
     }
-
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
     }
-
     @Override
     public void pause() {
         Gdx.input.setInputProcessor(null);
@@ -99,7 +86,7 @@ public class PantallaInicio implements Screen, InputProcessor {
     public void dispose() {
         Gdx.input.setInputProcessor(null);
         spritebatch.dispose();
-        fondoInicio.dispose();
+        fondoDerrota.dispose();
     }
 
     @Override
@@ -119,11 +106,13 @@ public class PantallaInicio implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
         return false;
     }
 

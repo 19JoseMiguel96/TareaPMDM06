@@ -8,22 +8,23 @@ public class Mundo {
     public static final int TAMANO_MUNDO_ALTO=500;
     public final static Vector2 TAMANO_MADERA = new Vector2(10,30);
     public final static Vector2 TAMANO_ROCA = new Vector2(10,30);
-    public final static Vector2 TAMANO_ARANA = new Vector2(10,30);
+    public final static Vector2 TAMANO_ARANA = new Vector2(12,35);
     public final static Vector2 TAMANO_ABEJA = new Vector2(10,30);
     private PersonajePrincipal personP;
     private Array<ElementoMovil> elementoMovil;
-    private Array<Enemigo> enemigo;
+    private final static int TEMPO_INICIAL=0;
+    private float cronometro;
 
     public Mundo(){
-        personP = new PersonajePrincipal(new Vector2(15,50), new Vector2(10,30),120);
+        personP = new PersonajePrincipal(new Vector2(15,50), new Vector2(6,37),120);
         elementoMovil = new Array<ElementoMovil>();
-        enemigo = new Array<Enemigo>();
-        enemigo.add(new Enemigo(new Vector2(60,95),TAMANO_ABEJA.cpy(),-25, Enemigo.TIPOS_ELEMENTOS.ABEJA));
-        elementoMovil.add(new ElementoMovil(new Vector2(90,50),TAMANO_MADERA.cpy(),-25, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
-        enemigo.add(new Enemigo(new Vector2(130,95),TAMANO_ABEJA.cpy(),-25, Enemigo.TIPOS_ELEMENTOS.ABEJA));
-        elementoMovil.add(new ElementoMovil(new Vector2(170,50),TAMANO_ROCA.cpy(),-25, ElementoMovil.TIPOS_ELEMENTOS.ROCA));
-        enemigo.add(new Enemigo(new Vector2(210,50),TAMANO_ARANA.cpy(),-25, Enemigo.TIPOS_ELEMENTOS.ARANA));
+            elementoMovil.add(new ElementoMovil(new Vector2(100,50),TAMANO_MADERA.cpy(),-25, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
+        elementoMovil.add(new ElementoMovil(new Vector2(150,50),TAMANO_ROCA.cpy(),-25, ElementoMovil.TIPOS_ELEMENTOS.ROCA));
+        elementoMovil.add(new ElementoMovil(new Vector2(200,50),TAMANO_MADERA.cpy(),-25, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
         elementoMovil.add(new ElementoMovil(new Vector2(250,50),TAMANO_MADERA.cpy(),-25, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
+        elementoMovil.add(new ElementoMovil(new Vector2(300,50),TAMANO_ROCA.cpy(),-25, ElementoMovil.TIPOS_ELEMENTOS.ROCA));
+        elementoMovil.add(new ElementoMovil(new Vector2(350,50),TAMANO_MADERA.cpy(),-25, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
+        cronometro=TEMPO_INICIAL;
     }
 
     public PersonajePrincipal getPersonajePrincipal() {
@@ -32,8 +33,16 @@ public class Mundo {
     public Array<ElementoMovil> getElementosMoviles() {
         return elementoMovil;
     }
-    public Array<Enemigo> getEnemigos() {
-        return enemigo;
+    public int getCronometro() {
+        return (int)cronometro;
+    }
+
+    public void setCronometro(float cronometro) {
+        this.cronometro = cronometro;
+    }
+
+    public void updateCronometro(float delta){
+        cronometro+=delta;
     }
 
 }

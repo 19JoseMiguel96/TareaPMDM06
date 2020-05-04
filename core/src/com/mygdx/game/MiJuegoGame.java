@@ -8,11 +8,13 @@ public class MiJuegoGame extends Game {
     @Override
     public void create() {
         AssetsJuego.cargarTexturas();
+        Audio.inicializarSonidos();
         setScreen(new PantallaInicio(this));
     }
     @Override
     public void dispose(){
         super.dispose();
         AssetsJuego.liberarTexturas();
+        Audio.liberarSonidos();
     }
 }

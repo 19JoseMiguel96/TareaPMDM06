@@ -34,8 +34,8 @@ public abstract class Personaje {
      *
      */
     public void actualizarRectangulo(){
-        rectangulo.x=posicion.x;
-        rectangulo.y=posicion.y;
+        rectangulo.x=getPosicion().x;
+        rectangulo.y=getPosicion().y;
     }
 
     /**

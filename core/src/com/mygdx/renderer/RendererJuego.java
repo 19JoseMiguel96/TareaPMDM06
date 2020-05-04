@@ -6,13 +6,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.Controles;
 import com.mygdx.game.AssetsJuego;
 import com.mygdx.modelo.ElementoMovil;
-import com.mygdx.modelo.Enemigo;
 import com.mygdx.modelo.Mundo;
 import com.mygdx.modelo.PersonajePrincipal;
 
@@ -22,6 +22,8 @@ public class RendererJuego implements InputProcessor {
     private OrthographicCamera camara2d;
     private Vector3 temporal;
     private boolean debugger=false;
+    private StringBuilder cronometro;
+    private BitmapFont bitMapFont;
     private Mundo miMundo;
     private PersonajePrincipal personajePrincipal;
 
@@ -31,6 +33,7 @@ public class RendererJuego implements InputProcessor {
         camara2d = new OrthographicCamera();
         spritebatch = new SpriteBatch();
         shaperender = new ShapeRenderer();
+        bitMapFont = new BitmapFont();
     }
     private void dibujarPersonajePrincipal(){
         spritebatch.draw(AssetsJuego.texturaPersonajeP,
@@ -43,8 +46,14 @@ public class RendererJuego implements InputProcessor {
                 case MADERA:
                     textura = AssetsJuego.texturaMadera;
                     break;
-                default:
+                case ROCA:
                     textura = AssetsJuego.texturaRoca;
+                    break;
+                case ARANA:
+                    textura = AssetsJuego.texturaArana;
+                    break;
+                default:
+                    textura = AssetsJuego.texturaAbeja;
                     break;
             }
             if (elementoM.getVelocidad()<0){
@@ -59,22 +68,7 @@ public class RendererJuego implements InputProcessor {
         spritebatch.draw(AssetsJuego.texturaFondo,
                 0,0,Mundo.TAMANO_MUNDO_ANCHO,Mundo.TAMANO_MUNDO_ALTO);
     }
-    private void dibujarEnemigos(float delta){
-        Texture textura=null;
-        for (Enemigo enemigo : miMundo.getEnemigos()){
-            switch(enemigo.getTipo()){
-                case ARANA:
-                    textura = AssetsJuego.texturaArana;
-                    break;
-                default:
-                    textura = AssetsJuego.texturaAbeja;
-                    break;
-            }
-            spritebatch.draw(textura,
-                    enemigo.getPosicion().x,enemigo.getPosicion().y,
-                    enemigo.getTamano().x,enemigo.getTamano().y);
-        }
-    }
+
     private void dibujarControles(){
 
         // Fondo negro
@@ -82,6 +76,16 @@ public class RendererJuego implements InputProcessor {
         spritebatch.draw(AssetsJuego.texturaPausa, Controles.CONTROL_PAUSA.x,Controles.CONTROL_PAUSA.y,Controles.CONTROL_PAUSA.width,Controles.CONTROL_PAUSA.height);
         spritebatch.draw(AssetsJuego.texturaSalir, Controles.CONTROL_SALIR.x,Controles.CONTROL_SALIR.y,Controles.CONTROL_SALIR.width,Controles.CONTROL_SALIR.height);
     }
+    private void dibujarCronometro(){
+        cronometro = new StringBuilder();
+        cronometro.append(miMundo.getCronometro());
+        int posx=Controles.POSXCRONOMETRO;
+        int posy=Controles.POSYCRONOMETRO;
+        bitMapFont.setColor(Color.WHITE);
+        bitMapFont.getData().setScale(0.3f, 1.2f);
+        bitMapFont.draw(spritebatch,cronometro, posx, posy);
+    }
+
 
     /**
      * Dibuja todos los elementos gráficos de la pantalla.
@@ -93,9 +97,9 @@ public class RendererJuego implements InputProcessor {
         spritebatch.begin();
             dibujarFondo();
             dibujarElementosMoviles(delta);
-            dibujarEnemigos(delta);
             dibujarPersonajePrincipal();
             dibujarControles();
+            dibujarCronometro();
         spritebatch.end();
 
         if (debugger){
@@ -112,6 +116,7 @@ public class RendererJuego implements InputProcessor {
     public void dispose(){
         Gdx.input.setInputProcessor(null);
         spritebatch.dispose();
+        bitMapFont.dispose();
     }
 
     @Override

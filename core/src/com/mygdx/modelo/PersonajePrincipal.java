@@ -9,7 +9,7 @@ public class PersonajePrincipal extends Personaje {
     public PersonajePrincipal(Vector2 posicion, Vector2 tamano, float velocidade_max) {
         super(posicion, tamano, velocidade_max);
         velocidad = new Vector2(0,0);
-        getRectangulo().setSize(tamano.x/2);
+        getRectangulo().setSize(tamano.x-2, tamano.y-2);
 
     }
 
@@ -28,11 +28,11 @@ public class PersonajePrincipal extends Personaje {
     public void setVelocidadY(float y){
         velocidad.y = y;
     }
+
     @Override
     public void actualizarRectangulo(){
-
-        getRectangulo().x = getPosicion().x+getTamano().x/4;
-        getRectangulo().y = getPosicion().y+getTamano().y/4;
+        getRectangulo().x = getPosicion().x;
+        getRectangulo().y = getPosicion().y;
 
     }
 
@@ -40,5 +40,6 @@ public class PersonajePrincipal extends Personaje {
     public void update(float delta) {
         // TODO Auto-generated method stub
         setPosicion(getPosicion().x+velocidad.x*delta, getPosicion().y+velocidad.y*delta);
+        actualizarRectangulo();
     }
 }

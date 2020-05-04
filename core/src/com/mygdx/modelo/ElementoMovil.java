@@ -3,7 +3,7 @@ package com.mygdx.modelo;
 import com.badlogic.gdx.math.Vector2;
 
 public class ElementoMovil extends Personaje {
-    public static enum TIPOS_ELEMENTOS {MADERA, ROCA};
+    public static enum TIPOS_ELEMENTOS {MADERA, ROCA, ABEJA, ARANA};
     private TIPOS_ELEMENTOS tipo;
 
     public ElementoMovil(Vector2 posicion, Vector2 tamano, float velocidad_max,TIPOS_ELEMENTOS tipo) {

@@ -3,13 +3,17 @@ package com.mygdx.pantallas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.Controles;
 import com.mygdx.controlador.ControladorJuego;
+import com.mygdx.game.Audio;
+import com.mygdx.game.MejoresPuntuaciones;
 import com.mygdx.game.MiJuegoGame;
+import com.mygdx.modelo.ElementoMovil;
 import com.mygdx.modelo.Mundo;
 import com.mygdx.modelo.PersonajePrincipal;
 import com.mygdx.renderer.RendererJuego;
@@ -23,6 +27,7 @@ public class PantallaJuego implements Screen, InputProcessor {
     private MiJuegoGame miJuegoGame;
     private RendererJuego rendererJuego;
     private ControladorJuego controladorJuego;
+
 
     Mundo miMundo;
     private PersonajePrincipal personajePrincipal;
@@ -42,6 +47,7 @@ public class PantallaJuego implements Screen, InputProcessor {
     public void render(float delta) {
         rendererJuego.render(delta);
         controladorJuego.update(delta);
+        derrota();
 
         if (pausa){
             miJuegoGame.setScreen(new PantallaPausa(miJuegoGame, this));
@@ -103,23 +109,24 @@ public class PantallaJuego implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(personajePrincipal.getPosicion().y <= 50){
-            controladorJuego.saltar(true);
-        }
 
         Vector3 vecTemporal = new Vector3(screenX,screenY,0);
         rendererJuego.getCamara2d().unproject(vecTemporal);
         Circle dedo = new Circle(vecTemporal.x,vecTemporal.y,2);
         Rectangle recTemporal = new Rectangle();
+        Rectangle recTemporal2 = new Rectangle();
         recTemporal.set(Controles.CONTROL_PAUSA.x, Controles.CONTROL_PAUSA.y,Controles.CONTROL_PAUSA.width,Controles.CONTROL_PAUSA.height);
-
+        recTemporal2.set(Controles.CONTROL_SALIR.x,Controles.CONTROL_SALIR.y,Controles.CONTROL_SALIR.width,Controles.CONTROL_SALIR.height);
         if (Intersector.overlaps(dedo, recTemporal)){
             pausa = true;
         }
-        recTemporal.set(Controles.CONTROL_SALIR.x,Controles.CONTROL_SALIR.y,Controles.CONTROL_SALIR.width,Controles.CONTROL_SALIR.height);
-        if (Intersector.overlaps(dedo, recTemporal)){
+        if (Intersector.overlaps(dedo, recTemporal2)){
             dispose();
             miJuegoGame.setScreen(new PantallaInicio(miJuegoGame));
+        }
+        else if(personajePrincipal.getPosicion().y <= 50 && !Intersector.overlaps(dedo, recTemporal)){
+            Audio.sonidoSalto.play();
+            controladorJuego.saltar(true);
         }
         return false;
     }
@@ -143,5 +150,15 @@ public class PantallaJuego implements Screen, InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public void derrota(){
+        for (ElementoMovil elementoMovil : miMundo.getElementosMoviles()){
+            if (Intersector.overlaps(elementoMovil.getRectangulo(), personajePrincipal.getRectangulo())){
+                Audio.sonidoChoque.play();
+                miJuegoGame.setScreen(new PantallaDerrota(miJuegoGame));
+                MejoresPuntuaciones.añadirPuntuacion(miMundo.getCronometro());
+            }
+        }
     }
 }

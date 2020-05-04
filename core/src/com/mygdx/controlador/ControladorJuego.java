@@ -2,19 +2,29 @@ package com.mygdx.controlador;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.Controles;
+import com.mygdx.game.Audio;
+import com.mygdx.game.MiJuegoGame;
 import com.mygdx.modelo.ElementoMovil;
-import com.mygdx.modelo.Enemigo;
 import com.mygdx.modelo.Mundo;
 import com.mygdx.modelo.PersonajePrincipal;
+import com.mygdx.pantallas.PantallaInicio;
+import com.mygdx.pantallas.PantallaJuego;
+import com.mygdx.pantallas.PantallaPausa;
 
 import java.util.HashMap;
 
 public class ControladorJuego {
     private Mundo miMundo;
     private PersonajePrincipal personajePrincipal;
-
+    private MiJuegoGame miJuegoGame;
     private boolean pulsado;
+    private int aumentoV=1, rival, c=5, aumentoVP=1;
+    private Array<ElementoMovil> elementoMovil;
+    private String elementoMovilFinal, elementoMovilActual;
     public ControladorJuego (Mundo mundo){
         this.miMundo=mundo;
         personajePrincipal = miMundo.getPersonajePrincipal();
@@ -24,58 +34,101 @@ public class ControladorJuego {
         // Actualiza el Personaje principal
         personajePrincipal.update(delta);
         if(pulsado==true){
-            personajePrincipal.setVelocidadY(personajePrincipal.velocidad_max);
+            personajePrincipal.setVelocidadY(personajePrincipal.velocidad_max+aumentoVP);
             pulsado=false;
         }
         if(personajePrincipal.getPosicion().y > 130){
-            personajePrincipal.setVelocidadY(-personajePrincipal.velocidad_max);
+            personajePrincipal.setVelocidadY(-personajePrincipal.velocidad_max-aumentoVP);
         }
         if(personajePrincipal.getPosicion().y <= 50){
             personajePrincipal.setPosicion(15, 50);
         }
-        for (ElementoMovil elementoMovil : miMundo.getElementosMoviles()){
-            if (Intersector.overlaps(elementoMovil.getRectangulo(), personajePrincipal.getRectangulo())){
-                Gdx.app.log("logjuego",  "CHOQUE!!!!");
-            }
-        }
-        for (Enemigo enemigo : miMundo.getEnemigos()){
-            if (Intersector.overlaps(enemigo.getRectangulo(), personajePrincipal.getRectangulo())){
-                Gdx.app.log("logjuego",  "CHOQUE!!!!");
-            }
-        }
-
-
     }
     private void controlarElementosMoviles(float delta){
         for(ElementoMovil elementoMovil: miMundo.getElementosMoviles()){
             elementoMovil.update(delta);
-            if (elementoMovil.getVelocidad()>0){	// Si va izquierda a derecha
-                if (elementoMovil.getPosicion().x>=Mundo.TAMANO_MUNDO_ANCHO){
-                    elementoMovil.setPosicion(-Mundo.TAMANO_ROCA.x, elementoMovil.getPosicion().y);
-                }
-            }
-            else{	// Si va de derecha a izquierda
-                if (elementoMovil.getPosicion().x<=-elementoMovil.getTamano().x){
-                    elementoMovil.setPosicion(Mundo.TAMANO_MUNDO_ANCHO, elementoMovil.getPosicion().y);
-                }
-            }
+            elementoMovilFinal= ""+miMundo.getElementosMoviles().get(5);
+            elementoMovilActual = ""+elementoMovil;
+             if (elementoMovil.getPosicion().x<=-elementoMovil.getTamano().x) {
+                 if(elementoMovilActual.equals(elementoMovilFinal)) {
+                     miMundo.getElementosMoviles().removeIndex(0);
+                     miMundo.getElementosMoviles().removeIndex(0);
+                     miMundo.getElementosMoviles().removeIndex(0);
+                     miMundo.getElementosMoviles().removeIndex(0);
+                     miMundo.getElementosMoviles().removeIndex(0);
+                     miMundo.getElementosMoviles().removeIndex(0);
+                     aumentoV = aumentoV + 4;
+                     aumentoVP = aumentoVP + 13;
+                     rival = (int) (Math.random() * 4 + 1);
+                     if (rival == 1) {
+
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(250,
+                                 50), Mundo.TAMANO_ROCA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ROCA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(300,
+                                 50), Mundo.TAMANO_ARANA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ARANA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(350,
+                                 50), Mundo.TAMANO_MADERA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(380,
+                                 95), Mundo.TAMANO_ABEJA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ABEJA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(430,
+                                 50), Mundo.TAMANO_ROCA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ROCA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(480,
+                                 50), Mundo.TAMANO_ARANA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ARANA));
+
+                         //miMundo.getElementosMoviles().removeValue(elementoMovil, true);
+
+
+                     } else if (rival == 2) {
+
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(250,
+                                 50), Mundo.TAMANO_ROCA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ROCA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(280,
+                                 95), Mundo.TAMANO_ABEJA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ABEJA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(330,
+                                 50), Mundo.TAMANO_MADERA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(360,
+                                 95), Mundo.TAMANO_ABEJA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ABEJA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(410,
+                                 50), Mundo.TAMANO_ARANA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ARANA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(460,
+                                 50), Mundo.TAMANO_ROCA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ROCA));
+                         //miMundo.getElementosMoviles().removeValue(elementoMovil, true);
+
+                     } else if (rival == 3) {
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(250,
+                                 50), Mundo.TAMANO_MADERA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(280,
+                                 95), Mundo.TAMANO_ABEJA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ABEJA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(330,
+                                 50), Mundo.TAMANO_ARANA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ARANA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(380,
+                                 50), Mundo.TAMANO_ROCA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ROCA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(430,
+                                 50), Mundo.TAMANO_MADERA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(460,
+                                 95), Mundo.TAMANO_ABEJA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ABEJA));
+                         //miMundo.getElementosMoviles().removeValue(elementoMovil, true);
+
+                     } else {
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(250,
+                                 50), Mundo.TAMANO_MADERA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(300,
+                                 50), Mundo.TAMANO_ROCA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ROCA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(350,
+                                 50), Mundo.TAMANO_MADERA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.MADERA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(380,
+                                 95), Mundo.TAMANO_ABEJA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ABEJA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(430,
+                                 50), Mundo.TAMANO_ARANA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ARANA));
+                         miMundo.getElementosMoviles().add(new ElementoMovil(new Vector2(480,
+                                 50), Mundo.TAMANO_ROCA.cpy(), -25 - aumentoV, ElementoMovil.TIPOS_ELEMENTOS.ROCA));
+                         //miMundo.getElementosMoviles().removeValue(elementoMovil, true);
+                     }
+                 }
+             }
         }
     }
-    private void controlarEnemigos(float delta){
-        for(Enemigo enemigo: miMundo.getEnemigos()){
-            enemigo.update(delta);
-            if (enemigo.getVelocidad()>0){	// Si va izquierda a derecha
-                if (enemigo.getPosicion().x>=Mundo.TAMANO_MUNDO_ANCHO){
-                    enemigo.setPosicion(-Mundo.TAMANO_ABEJA.x, enemigo.getPosicion().y);
-                }
-            }
-            else{	// Si va de derecha a izquierda
-                if (enemigo.getPosicion().x<=-enemigo.getTamano().x){
-                    enemigo.setPosicion(Mundo.TAMANO_MUNDO_ANCHO, enemigo.getPosicion().y);
-                }
-            }
-        }
-    }
+
 
     public void saltar(boolean pulsado2){
         pulsado=pulsado2;
@@ -87,8 +140,8 @@ public class ControladorJuego {
      * @param delta
      */
     public void update(float delta){
+        miMundo.updateCronometro(delta);
         controlarElementosMoviles(delta);
-        controlarEnemigos(delta);
         controlarPersonajeP(delta);
     }
 }
